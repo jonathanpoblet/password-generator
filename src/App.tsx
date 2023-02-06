@@ -1,9 +1,9 @@
-import { useState,useEffect } from 'react';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { CheckCircle, Circle, Justify } from 'react-bootstrap-icons';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 
 import './App.css';
+import PasswordInputs from './components/PasswordInputs';
+import PasswordViewer from './components/PasswordViewer';
 
 function App() {
 
@@ -17,24 +17,6 @@ function App() {
   const lettersLowerCase:string[] = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
   const numbers:number[] = [1,2,3,4,5,6,7,8,9];
   const symbols:string[] = ['!','#','$','%','&','/','=','?','¿','¡','*','+'];
-  
-  function copyPassword(password:string) {
-    if(password) {
-      Swal.fire(`Password: ${password} copied successfully`);
-      Swal.fire({
-        title: `${password}`,
-        text: 'Copied successfully',
-        confirmButtonColor:'black'
-      })
-    } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Password',
-        text: 'Must generate a password',
-        confirmButtonColor:'black'
-      })
-    }
-  }
 
   function random(characters: (string|number)[]) : number {
     const number:number = Math.floor(Math.random() * characters.length);
@@ -75,87 +57,31 @@ function App() {
       })
     }
   }
-
-
-  useEffect(() => {
-    const passwordContainer = document.getElementById('password') as HTMLSpanElement;
-    passwordContainer.innerText = password
-  }, [password]);
-
   
   
   return (
     <div className='app'>
-      <div className='password'>
-        <h1 className='password-title'>Password Generator</h1>
-        <div className='password-generated'>
-          <span className='password-generated-pass' id='password'></span>
-          <CopyToClipboard text={ password } onCopy={() => copyPassword(password)}>
-            <Justify className='password-generated-copy'/>
-          </CopyToClipboard>
-        </div>
-        <div className='password-container'>
-          <label className='password-container-label'>Password length</label>
-          <input className='password-container-input' type='number'  defaultValue ='8' id='password-length'/>
-        </div>
-        <div className='password-container'>
-          <label className='password-container-label'>Include uppercase letters</label>
-          {
-            !checkUpperCase ? 
-            <Circle
-              onClick={() => setCheckUpperCase(!checkUpperCase)}
-              className='password-container-icon'/>
-            :
-            <CheckCircle
-              onClick={() => setCheckUpperCase(!checkUpperCase)}
-              className='password-container-icon'/>
-          }
-        </div>
-        <div className='password-container'>
-          <label className='password-container-label'>Include lowercase letters</label>
-          {
-            !checkLowerCase ? 
-            <Circle
-              onClick={() => setCheckLowerCase(!checkLowerCase)}
-              className='password-container-icon'/>
-            :
-            <CheckCircle
-              onClick={() => setCheckLowerCase(!checkLowerCase)}
-              className='password-container-icon'/>
-          }
-        </div>
-        <div className='password-container'>
-          <label className='password-container-label'>Include numbers</label>
-          {
-            !checkNumbers ? 
-            <Circle
-              onClick={() => setCheckNumbers(!checkNumbers)}
-              className='password-container-icon'/>
-            :
-            <CheckCircle
-              onClick={() => setCheckNumbers(!checkNumbers)}
-              className='password-container-icon'/>
-          }
-        </div>
-        <div className='password-container'>
-          <label className='password-container-label'>Include symbols</label>
-          {
-            !checkSymbols ? 
-            <Circle
-              onClick={() => setCheckSymbols(!checkSymbols)}
-              className='password-container-icon'/>
-            :
-            <CheckCircle
-              onClick={() => setCheckSymbols(!checkSymbols)}
-              className='password-container-icon'/>
-          }
-        </div>
+      <div className='app-container'>
+        <h1 className='app-container-title'>Password Generator</h1>
+        <PasswordViewer
+          password={ password }
+        />
+        <PasswordInputs
+          checkLowerCase={ checkLowerCase }
+          checkUpperCase={ checkUpperCase }
+          checkNumbers={ checkNumbers }
+          checkSymbols={ checkSymbols }
+          setCheckLowerCase= { setCheckLowerCase }
+          setCheckUpperCase= { setCheckUpperCase }
+          setCheckNumbers= { setCheckNumbers }
+          setCheckSymbols= { setCheckSymbols }
+        />
         <button 
           onClick={() => createPassword()}
-          className='password-button-generate'
-          >
-            GENERATE PASSWORD
-          </button>
+          className='app-container-button'
+        >
+          GENERATE PASSWORD
+        </button>
       </div>
     </div>
   )
